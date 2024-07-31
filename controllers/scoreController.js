@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteItem = exports.new_item = exports.add = exports.update = exports.list = void 0;
 const validation = require("../utils/validation");
@@ -21,15 +30,21 @@ var update = (req, res) => {
     repository.Update(score).then(_ => showScoresFor(res, score.studentId));
 };
 exports.update = update;
-var add = (req, res) => {
+var add = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const score = req.body;
     const errors = validateScore(score);
     if (errors.length > 0) {
         showCreateScore(res, score.studentId, errors);
         return;
     }
+    var all = yield repository.GetAll();
+    var existsSimilarScore = yield repository.ScoreExists(score);
+    if (existsSimilarScore) {
+        showCreateScore(res, score.studentId, ['Score for this subject already exists']);
+        return;
+    }
     repository.Create(score).then(_ => showScoresFor(res, score.studentId));
-};
+});
 exports.add = add;
 var new_item = (req, res) => {
     const studentId = parseInt(req.body.id);

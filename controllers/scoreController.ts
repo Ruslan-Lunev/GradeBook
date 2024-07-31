@@ -25,12 +25,19 @@ export var update = (req: Request, res: Response) => {
     repository.Update(score).then(_ => showScoresFor(res, score.studentId))
 }
 
-export var add = (req: Request, res: Response) => {
+export var add = async (req: Request, res: Response) => {
     const score: Score = req.body
 
     const errors = validateScore(score)
     if (errors.length > 0) {
         showCreateScore(res, score.studentId, errors)
+        return;
+    }
+
+    var all = await repository.GetAll()
+    var existsSimilarScore = await repository.ScoreExists(score)
+    if (existsSimilarScore) {
+        showCreateScore(res, score.studentId, ['Score for this subject already exists'])
         return;
     }
 

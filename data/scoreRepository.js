@@ -34,6 +34,15 @@ class StudentScoreRepository extends baseRepository_1.BaseRepository {
         let sql = `DELETE FROM ${this.table} WHERE studentId = ? AND subjectId = ?`;
         return database_1.database.run(sql, [score.studentId, score.subjectId]);
     }
+    ScoreExists(score) {
+        var sql = `SELECT * FROM ${this.table} WHERE studentId = ? AND subjectId = ?`;
+        return database_1.database.get(sql, [score.subjectId, score.subjectId])
+            .then((entity) => {
+            if (entity)
+                return true;
+            return false;
+        });
+    }
 }
 exports.StudentScoreRepository = StudentScoreRepository;
 //# sourceMappingURL=scoreRepository.js.map

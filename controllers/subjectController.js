@@ -1,16 +1,25 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteItem = exports.update = exports.edit = exports.new_item = exports.add = exports.list = void 0;
 const validation = require("../utils/validation");
-const baseRepository_1 = require("../data/baseRepository");
-const repository = new baseRepository_1.BaseRepository("Subject");
+const subjectRepository_1 = require("../data/subjectRepository");
+const repository = new subjectRepository_1.SubjectScoreRepository();
 var list = (req, res) => {
     repository.GetAll()
         .then(subjects => res.render('subject/list', { title: 'Subjects', subjects: subjects }))
         .catch(err => { throw new Error('Ops'); });
 };
 exports.list = list;
-var add = (req, res) => {
+var add = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const subject = req.body;
     const errors = [];
     if (!validation.isLength(subject.name, 3, 20))
@@ -21,10 +30,15 @@ var add = (req, res) => {
         res.render('subject/new', { title: 'Add Subject', errors: errors, subject: subject });
         return;
     }
+    var existingSubject = yield repository.GetByName(subject.name);
+    if (existingSubject) {
+        res.render('subject/new', { title: 'Add Subject', errors: ["Subject with same name already exists"], subject: subject });
+        return;
+    }
     repository.Create(subject)
         .then(lastId => res.redirect('/catalog/subject'))
         .catch(err => res.render('subject/new', { title: 'Add Subject', errors: ["Unable to add new subject"] }));
-};
+});
 exports.add = add;
 var new_item = (req, res) => {
     res.render('subject/new', { title: 'Add Subject' });

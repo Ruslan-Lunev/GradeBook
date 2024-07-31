@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import { Subject } from '../data/model/subject'
 import * as validation from '../utils/validation'
-import { BaseRepository } from '../data/baseRepository'
+import { SubjectScoreRepository } from '../data/subjectRepository'
 
-const repository = new BaseRepository<Subject>("Subject")
+const repository = new SubjectScoreRepository()
 
 export var list = (req: Request, res: Response) => {
     repository.GetAll()
@@ -11,7 +11,7 @@ export var list = (req: Request, res: Response) => {
         .catch(err => { throw new Error('Ops') })
 }
 
-export var add = (req: Request, res: Response) => {
+export var add = async (req: Request, res: Response) => {
     const subject: Subject = req.body
 
     const errors: string[] = [];
@@ -21,6 +21,12 @@ export var add = (req: Request, res: Response) => {
         errors.push("Wrong characters")
     if (errors.length > 0) {
         res.render('subject/new', { title: 'Add Subject', errors: errors, subject: subject })
+        return
+    }
+
+    var existingSubject = await repository.GetByName(subject.name)
+    if (existingSubject) {
+        res.render('subject/new', { title: 'Add Subject', errors: ["Subject with same name already exists"], subject: subject })
         return
     }
 

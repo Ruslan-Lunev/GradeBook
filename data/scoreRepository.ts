@@ -40,4 +40,14 @@ export class StudentScoreRepository extends BaseRepository<Score> {
         let sql = `DELETE FROM ${this.table} WHERE studentId = ? AND subjectId = ?`
         return database.run(sql, [score.studentId, score.subjectId])
     }
+
+    ScoreExists(score: Score): Promise<boolean> {
+        var sql = `SELECT * FROM ${this.table} WHERE studentId = ? AND subjectId = ?`
+        return database.get<Score>(sql, [score.subjectId, score.subjectId])
+            .then((entity) => {
+                if (entity)
+                    return true;
+                return false;
+        })
+    }
 }
