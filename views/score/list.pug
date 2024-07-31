@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+  h4 #{studentScore.firstName} #{studentScore.lastName}'s progress
+  form.form-inline(action="/catalog/score/new" method="POST" style="display:inline;")
+    input.form-control.sr-only(type="number" name="id" value=studentScore.id)
+    button.btn.btn-info.add-new.end-0.start-100(type="submit")
+        i.bi.bi-plus-lg
+        |  Add New
+  br
+  table.table.table-bordered.table-sm.table-hover.col-6.col-sm-2.col-md-6
+    thead.thead-dark
+      tr.d-flex
+        th.col.sr-only Id
+        th.col Subject
+        th.col-auto Score
+        th.col-auto Actions
+    tbody
+      each subjectScore in studentScore.scores
+          - var formId = 'form' + subjectScore.id;
+          tr.d-flex
+            td.col.sr-only
+              form.form-inline(action="/catalog/score/update" method="POST" id=formId)
+                input.form-control.sr-only(type="number" name="studentId" value=studentScore.id)
+                input.form-control.sr-only(type="number" name="subjectId" value=subjectScore.id)
+            td.col #{subjectScore.name}
+            td.col-auto
+              input#scoreInput.form-control(type='number' name="value" placeholder="Score" form=formId value=subjectScore.value min="1" max="10")
+            td.col-auto.form-inline
+              button.btn.btn-link.btn-sm(title="Save" type="submit" form=formId)
+                i.bi.bi-floppy-fill
+              form.form-inline(action="/catalog/score/delete" method="POST")
+                input.form-control.sr-only(type="number" name="studentId" value=studentScore.id)
+                input.form-control.sr-only(type="number" name="subjectId" value=subjectScore.id)
+                button.btn.btn-link.btn-sm(title="Remove" type="submit")
+                  i.bi.bi-x-square-fill.text-danger

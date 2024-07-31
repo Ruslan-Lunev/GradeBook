@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  h3 Subjects
+  form.form-inline(action="/catalog/subject/create" method="GET" style="display:inline;")
+    button.btn.btn-info.add-new.end-0.start-100(type="submit")
+        i.bi.bi-plus-lg
+        |  Add New
+  br
+  table.table.table-bordered.table-sm.table-hover.col-6.col-sm-2.col-md-6
+    thead.thead-dark
+      tr.d-flex
+        th.col Name
+        th.col-auto Actions
+    tbody
+      each subject in subjects
+          tr.d-flex
+            td.col #{subject.name}
+            td.col-auto
+              form.form-inline(action="/catalog/subject/edit" method="POST" style="display:inline;")
+                input.form-control.sr-only(type="number" name="id" placeholder="Id" value=subject.id)
+                button.btn.btn-link.btn-sm(title="Edit" type="submit")
+                  i.bi.bi-pencil-square
+              form.form-inline(action="/catalog/subject/delete" method="POST" style="display:inline;")
+                input.form-control.sr-only(type="number" name="id" placeholder="Id" value=subject.id)
+                button.btn.btn-link.btn-sm(title="Remove" type="submit")
+                  i.bi.bi-x-square-fill.text-danger

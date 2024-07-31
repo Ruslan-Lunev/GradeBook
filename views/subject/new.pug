@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+    h3 Add Subject
+    #error
+        if errors
+            each error in errors
+                p.text-danger #{error}
+    form(action="/catalog/subject/create" method="POST")
+      .form-group.col-md-6
+        label(for='nameInput') Name
+        input#nameInput.form-control(type='text' name="name" placeholder="Name")
+      button.btn.btn-primary(type='submit') Add

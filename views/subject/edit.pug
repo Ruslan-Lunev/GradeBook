@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+    h3 Edit Subject
+    #error
+        if errors
+            each error in errors
+                p.text-danger #{error}
+    form(action="/catalog/subject/update" method="POST")
+      .form-group.col-md-6
+        input.form-control.sr-only(type="number" id="inputId" name="id" placeholder="Id" value=subject.id)
+        label(for='nameInput') Name
+        input#nameInput.form-control(type='text' name="name" placeholder="Name" value=subject.name)
+      button.btn.btn-primary(type='submit') Save

@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+    h3 Add Score
+    #error
+        if errors
+            each error in errors
+                p.text-danger #{error}
+    form(action="/catalog/score/create" method="POST")
+      .form-group.col-md-6.form-inline
+        input.form-control.sr-only(type="number" name="studentId" placeholder="Id" value=studentId)
+        select#subjectSelect.select.form-control.input-lg.col-md-5(name="subjectId")
+          each subject, index in subjects
+            - var first = index==0
+            option(value=subject.id, name="subjectId" selected=first) #{subject.name}
+        input#scoreInput.form-control.col-auto(type='number' name="value" placeholder="Score" value=10 min="1" max="10")
+      button.btn.btn-primary(type='submit') Add

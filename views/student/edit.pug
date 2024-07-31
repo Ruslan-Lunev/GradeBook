@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    h3 Edit Student
+    #error
+        if errors
+            each error in errors
+                p.text-danger #{error}
+    form(action="/catalog/student/update" method="POST")
+      .form-group.col-md-6
+        input.form-control.sr-only(type="number" id="inputId" name="id" placeholder="Id" value=student.id)
+        label(for='firstNameInput') First Name
+        input#firstNameInput.form-control(type='text' name="firstName" placeholder="First Name" value=student.firstName)
+        label(for='lastNameInput') Last Name
+        input#lastNameInput.form-control(type='text' name="lastName" placeholder="Last Name" value=student.lastName)
+      button.btn.btn-primary(type='submit') Save
