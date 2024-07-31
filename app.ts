@@ -3,12 +3,12 @@ import { AddressInfo } from "net";
 import * as path from 'path';
 import * as cookieParser from 'cookie-parser';
 
-import userRoute from './routes/user';
-import catalogRoute from './routes/catalog';
 import { LimiterOptions, RequestLimiter } from './middlewares/requestLimiter';
 import { authenticate } from './middlewares/authentication';
 
-const debug = require('debug')('Grade Book app');
+import userRoute from './routes/user';
+import catalogRoute from './routes/catalog';
+
 const app = express();
 
 // view engine setup
@@ -36,21 +36,6 @@ app.use((req, res, next) => {
 });
 
 // error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use((err, req, res, next) => {
-        res.status(err[ 'status' ] || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.render('error', {
@@ -62,9 +47,9 @@ app.use((err, req, res, next) => {
 app.set('port', process.env.PORT || 3000);
 
 const server = app.listen(app.get('port'), () => {
-    debug(`Express server listening on port ${(server.address() as AddressInfo).port}`);
+    console.log(`Express server listening on port ${(server.address() as AddressInfo).port}`);
 });
 
-//server.timeout = 5000
-//server.headersTimeout = 2000
-//server.requestTimeout = 2000
+server.timeout = 5000
+server.headersTimeout = 2000
+server.requestTimeout = 2000

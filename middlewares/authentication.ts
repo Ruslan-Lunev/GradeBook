@@ -11,7 +11,8 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     //const token = req.header('Authorization')?.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        //return res.status(401).json({ message: 'Unauthorized' });
+        throw new Error('Unauthorized')
     }
 
     try {
@@ -19,6 +20,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         next();
     } catch (error) {
         console.error('Error verifying token:', error);
-        return res.status(403).json({ message: 'Forbidden: Invalid token' });
+        throw new Error('Unauthorized')
+        //return res.status(403).json({ message: 'Forbidden: Invalid token' });
     }
 };

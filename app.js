@@ -3,11 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const user_1 = require("./routes/user");
-const catalog_1 = require("./routes/catalog");
 const requestLimiter_1 = require("./middlewares/requestLimiter");
 const authentication_1 = require("./middlewares/authentication");
-const debug = require('debug')('Grade Book app');
+const user_1 = require("./routes/user");
+const catalog_1 = require("./routes/catalog");
 const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,19 +27,6 @@ app.use((req, res, next) => {
     next(err);
 });
 // error handlers
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use((err, req, res, next) => {
-        res.status(err['status'] || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-// production error handler
-// no stacktraces leaked to user
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.render('error', {
@@ -50,9 +36,9 @@ app.use((err, req, res, next) => {
 });
 app.set('port', process.env.PORT || 3000);
 const server = app.listen(app.get('port'), () => {
-    debug(`Express server listening on port ${server.address().port}`);
+    console.log(`Express server listening on port ${server.address().port}`);
 });
-//server.timeout = 5000
-//server.headersTimeout = 2000
-//server.requestTimeout = 2000
+server.timeout = 5000;
+server.headersTimeout = 2000;
+server.requestTimeout = 2000;
 //# sourceMappingURL=app.js.map
